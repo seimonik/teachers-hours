@@ -1,7 +1,6 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="common-layout">
-    <el-container>
+    <el-container class="layout-container-demo" style="height: 98vh">
       <el-aside width="250px">
         <AsideMenu />
       </el-aside>
@@ -9,6 +8,18 @@
     </el-container>
   </div>
 </template>
+
 <script setup>
 import AsideMenu from "../components/AsideMenu.vue";
 </script>
+
+<style scoped>
+.layout-container-demo .el-menu {
+  border-right: none;
+  background: var(--el-color-primary-light-8);
+}
+.layout-container-demo .el-aside {
+  color: var(--el-text-color-primary);
+  background: var(--el-color-primary-light-8);
+}
+</style>
