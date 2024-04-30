@@ -32,5 +32,15 @@ export default {
         data,
       });
     },
+    GetFile({ rootState }) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/reports`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
   },
 };
