@@ -1,31 +1,42 @@
 <template>
-  <el-upload
-    class="upload-demo"
-    drag
-    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-    multiple
-    :on-progress="handleProgress"
-  >
-    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-    <div class="el-upload__text">
-      Drop file here or <em>click to upload</em>
-    </div>
-    <template #tip>
-      <div class="el-upload__tip">
-        jpg/png files with a size less than 500kb
+  <div id="documents" class="d-grid gap-4">
+    <el-collapse>
+      <el-collapse-item title="Фильтры" name="docmentFilters">
+      </el-collapse-item>
+    </el-collapse>
+    <el-card shadow="never">
+      <div class="d-flex gap-2">
+        <div class="left-align-button">
+          <el-button color="#626aef" @click="dialogVisible = true"
+            >Загрузить</el-button
+          >
+        </div>
       </div>
-    </template>
-  </el-upload>
+    </el-card>
 
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="date" label="Date" width="180" />
-    <el-table-column prop="name" label="Name" width="180" />
-    <el-table-column prop="address" label="Address" />
-  </el-table>
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column prop="date" label="Date" width="180" />
+      <el-table-column prop="name" label="Name" width="180" />
+      <el-table-column prop="address" label="Address" />
+    </el-table>
+
+    <el-dialog
+      v-model="dialogVisible"
+      title="Загрузка документа"
+      width="600"
+      destroy-on-close
+      center
+    >
+      <SaveFile @form-closed="handleCloseDialog" />
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { UploadFilled } from "@element-plus/icons-vue";
+import { ref } from "vue";
+import SaveFile from "@/components/documents/SaveFile.vue";
+
+const dialogVisible = ref(false);
 
 const tableData = [
   {
@@ -50,7 +61,13 @@ const tableData = [
   },
 ];
 
-const handleProgress = (test: any) => {
-  console.log(test);
+const handleCloseDialog = () => {
+  dialogVisible.value = false;
 };
 </script>
+
+<style>
+.left-align-button {
+  text-align: left;
+}
+</style>
