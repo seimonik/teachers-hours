@@ -4,6 +4,10 @@
     class="el-menu-vertical-demo"
     @select="handleSelect"
   >
+    <li class="el-menu-item">
+      <img :src="logo" style="width: 50px; height: 50px" />
+      <p style="font-size: 18px; font-weight: bold">СГУ Учёт</p>
+    </li>
     <el-menu-item index="documents">
       <el-icon><Edit /></el-icon>
       <span>Документы</span>
@@ -22,6 +26,7 @@
 <script setup>
 import { Edit } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import logo from "@/assets/sgulogo.png";
 
 const router = useRouter();
 // const menuItems = [

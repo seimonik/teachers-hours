@@ -78,13 +78,14 @@ const options = [
     label: "Расчет",
   },
 ];
-const emit = defineEmits(["form-closed"]);
+const emit = defineEmits(["form-closed", "update-documents-list"]);
 
 const submitUpload = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
       uploadRef.value!.submit();
+      emit("update-documents-list");
       console.log("submit!");
     } else {
       console.log("error submit!", fields);
