@@ -6,21 +6,6 @@ export default {
   getters: {},
   mutations: {},
   actions: {
-    test() {
-      console.log("test");
-    },
-    TasksByFilters({ rootState }, data) {
-      console.log(data);
-      return API({
-        method: "post",
-        url: `${rootState.authConfig.apiTaskService}/api/notice/v1/tasks-by-filters`,
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-        },
-        data,
-      });
-    },
     UploadFile({ rootState }, data) {
       return API({
         method: "post",
@@ -40,6 +25,40 @@ export default {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
+      });
+    },
+    AddTeacher({ rootState }, data) {
+      return API({
+        method: "post",
+        url: `https://localhost:7055/api/teachers`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        data,
+      });
+    },
+    GetTeachers({ rootState }) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/teachers`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    UpdateTeacher({ rootState }, { teacherId, data }) {
+      console.log(teacherId);
+      console.log(teacherId);
+      return API({
+        method: "put",
+        url: `https://localhost:7055/api/teachers/${teacherId}`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        data,
       });
     },
   },

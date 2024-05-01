@@ -5,12 +5,10 @@
       </el-collapse-item>
     </el-collapse>
     <el-card shadow="never">
-      <div class="d-flex gap-2">
-        <div class="left-align-button">
-          <el-button color="#626aef" @click="dialogVisible = true"
-            >Загрузить</el-button
-          >
-        </div>
+      <div class="left-align-button">
+        <el-button color="#626aef" @click="dialogVisible = true"
+          >Загрузить</el-button
+        >
       </div>
     </el-card>
 
