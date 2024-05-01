@@ -12,9 +12,9 @@
       <el-icon><Edit /></el-icon>
       <span>Документы</span>
     </el-menu-item>
-    <el-menu-item index="about">
-      <el-icon><icon-menu /></el-icon>
-      <span>Navigator Two</span>
+    <el-menu-item index="teachers">
+      <el-icon><User /></el-icon>
+      <span>Преподаватели</span>
     </el-menu-item>
     <el-menu-item index="home">
       <el-icon><document /></el-icon>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { Edit } from "@element-plus/icons-vue";
+import { Edit, User } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import logo from "@/assets/sgulogo.png";
 
