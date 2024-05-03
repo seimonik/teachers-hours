@@ -17,7 +17,8 @@ export default {
         data,
       });
     },
-    GetFile({ rootState }) {
+    GetFiles({ rootState }, { params }) {
+      console.log(params);
       return API({
         method: "get",
         url: `https://localhost:7055/api/reports`,
@@ -25,6 +26,7 @@ export default {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
+        params,
       });
     },
     AddTeacher({ rootState }, data) {
@@ -50,15 +52,19 @@ export default {
     },
     UpdateTeacher({ rootState }, { teacherId, data }) {
       console.log(teacherId);
-      console.log(teacherId);
+      console.log(data);
       return API({
-        method: "put",
-        url: `https://localhost:7055/api/teachers/${teacherId}`,
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-        },
+        method: "post",
+        url: `https://localhost:7055/api/reports/${teacherId}/add-teachers`,
+        responseType: "blob",
         data,
+      });
+    },
+    GetDocumentFile({ rootState }, documentId) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/reports/${documentId}/download`,
+        responseType: "blob",
       });
     },
   },

@@ -17,7 +17,9 @@
         <el-table-column prop="name" label="Название" />
         <el-table-column prop="documentType" label="Тип документа" width="250">
           <template #default="{ row }">
-            {{ getDocumentType(row.documentType) }}</template
+            <el-tag :type="getDocumentTypeTag(row.documentType)">
+              {{ getDocumentType(row.documentType) }}</el-tag
+            ></template
           ></el-table-column
         >
         <el-table-column prop="createdAt" label="Дата создания" width="250">
@@ -47,7 +49,7 @@
 import { ref } from "vue";
 import SaveFile from "@/components/documents/SaveFile.vue";
 import store from "@/store";
-import { getFormattedDate } from "@/sevice/formatDate";
+import { getFormattedDate } from "@/service/formatDate";
 
 const dialogVisible = ref(false);
 
@@ -60,7 +62,7 @@ const documentsTable = ref<IDocument[]>();
 
 const getDocuments = async () => {
   await store
-    .dispatch("teachersHoursApi/GetFile")
+    .dispatch("teachersHoursApi/GetFiles", { params: null })
     .then((response) => {
       documentsTable.value = response.data;
     })
@@ -86,6 +88,18 @@ const getDocumentType = (type: string) => {
       return "Расчет";
     default:
       return "Обычный";
+  }
+};
+const getDocumentTypeTag = (type: string) => {
+  switch (type) {
+    case "Ordinary":
+      return "info";
+    case "Request":
+      return "success";
+    case "Calculation":
+      return "primary";
+    default:
+      return "info";
   }
 };
 </script>

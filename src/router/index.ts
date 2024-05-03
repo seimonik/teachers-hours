@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import DocumentsView from "@/views/DocumentsView.vue";
 import TeachersView from "@/views/TeachersView.vue";
+import HoursCalculationView from "@/views/HoursCalculationView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -32,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/teachers",
         name: "teachers",
         component: TeachersView,
+      },
+      {
+        path: "/calculation",
+        name: "calculation",
+        component: HoursCalculationView,
       },
     ],
   },
