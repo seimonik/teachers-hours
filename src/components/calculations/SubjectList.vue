@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="tableData" style="width: 100%">
+  <el-table :data="subjectList" style="width: 100%">
     <el-table-column
       prop="name"
       label="Наименование дисциплины"
@@ -43,10 +43,10 @@
           style="width: 240px"
         >
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in teachersList"
+            :key="item.id"
+            :label="item.fullName"
+            :value="item.fullName"
           />
         </el-select>
       </template>
@@ -57,7 +57,14 @@
 
 <script lang="ts" setup>
 import store from "@/store";
-import { ref } from "vue";
+import { IGetTeacher } from "@/types/interfaces/teacher";
+import { SubjectListProps } from "@/types/props";
+import { ref, toRefs } from "vue";
+
+const props = defineProps<SubjectListProps>();
+const { subjectList } = toRefs(props);
+
+const teachersList = ref<IGetTeacher[]>();
 
 const tableData = [
   {
@@ -97,6 +104,17 @@ const options = [
     label: "Option5",
   },
 ];
+
+const getTeachers = async () => {
+  await store
+    .dispatch("teachersHoursApi/GetTeachers")
+    .then((response) => {
+      teachersList.value = response.data;
+    })
+    .catch((error) => console.log(error));
+};
+getTeachers();
+
 const test = async () => {
   // await store
   //   .dispatch(

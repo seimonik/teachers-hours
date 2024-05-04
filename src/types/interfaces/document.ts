@@ -4,3 +4,22 @@ export interface IDocument {
   createdAt: string;
   documentType: string;
 }
+
+export interface ISubject {
+  name: string;
+  specialization: string;
+  semester: string;
+  budget: string;
+  commercial: string;
+  groups: string;
+  groupForm: string;
+  totalHours: string;
+  lectures: string;
+  seminars: string;
+  laboratory: string;
+  selfStudy: string;
+  loadPerWeek: string;
+  reportingForm: string;
+  remark: string;
+  teacherFullName: string;
+}

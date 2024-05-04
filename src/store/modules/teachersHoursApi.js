@@ -67,5 +67,15 @@ export default {
         responseType: "blob",
       });
     },
+    GetDocumentTable({ rootState }, documentId) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/reports/${documentId}`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
   },
 };
