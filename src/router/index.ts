@@ -39,6 +39,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "calculation",
         component: HoursCalculationView,
       },
+      {
+        path: "/calculation/:id",
+        name: "calculation-generate",
+        component: HoursCalculationView,
+      },
     ],
   },
 ];

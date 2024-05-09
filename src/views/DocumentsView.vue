@@ -27,6 +27,29 @@
             {{ getFormattedDate(row.createdAt) }}</template
           >
         </el-table-column>
+        <el-table-column width="200px">
+          <template #default="{ row }">
+            <el-button-group class="ml-4">
+              <router-link
+                :to="{
+                  name: 'calculation-generate',
+                  params: { id: 'c3613802-fe5d-4f9c-b0e2-e632c17f3c33' },
+                }"
+                custom
+                v-slot="{ navigate }"
+              >
+                <el-button
+                  v-if="row.documentType === 'Request'"
+                  type="primary"
+                  @click="navigate"
+                  :icon="DocumentAdd"
+                />
+              </router-link>
+              <el-button type="primary" :icon="Download" />
+              <el-button type="primary" :icon="Delete" />
+            </el-button-group>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
@@ -50,6 +73,7 @@ import { ref } from "vue";
 import SaveFile from "@/components/documents/SaveFile.vue";
 import store from "@/store";
 import { getFormattedDate } from "@/service/formatDate";
+import { DocumentAdd, Delete, Download } from "@element-plus/icons-vue";
 
 const dialogVisible = ref(false);
 

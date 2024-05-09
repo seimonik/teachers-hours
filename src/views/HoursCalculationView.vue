@@ -2,32 +2,25 @@
   <div id="hours-calculation">
     <el-card shadow="never">
       <el-row>
-        <el-col :span="14">
+        <el-col :span="12">
           <el-row>
-            <el-select
-              v-model="documentId"
-              filterable
-              placeholder="Select"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in optionsFiles"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
+            <el-text
+              ><el-text tag="b" size="large">{{ document.name }} </el-text
+              ><el-text tag="sup" size="small">{{
+                getFormattedDate(document.createdAt)
+              }}</el-text>
+            </el-text>
           </el-row>
           <el-row>
-            <el-button color="#626aef" @click="getTable"
+            <el-button color="#626aef" @click="addTeachers"
               >Изменить преподавательский состав</el-button
             >
-            <el-button color="#626aef" @click="addTeachers"
+            <el-button color="#626aef" @click="reportGenerate"
               >Сгенерировать отчет</el-button
             >
           </el-row>
         </el-col>
-        <el-col :span="10">
+        <el-col :span="12">
           <FilesList :files="document.childDocuments" />
         </el-col>
       </el-row>
@@ -94,6 +87,8 @@ import store from "@/store";
 import FilesList from "@/components/calculations/FilesList.vue";
 import { IDocument, ISubject } from "@/types/interfaces/document";
 import { IGetTeacher } from "@/types/interfaces/teacher";
+import { useRoute } from "vue-router";
+import { getFormattedDate } from "@/service/formatDate";
 
 const documentId = ref("");
 const document = ref<IDocument>({
@@ -103,22 +98,8 @@ const document = ref<IDocument>({
   documentType: "",
   childDocuments: [],
 });
-const optionsFiles = ref<IDocument[]>([]);
 const subjectList = ref<ISubject[]>([]);
 const teachersList = ref<IGetTeacher[]>();
-
-const getDocuments = async () => {
-  await store
-    .dispatch("teachersHoursApi/GetFiles", {
-      params: { DocumentType: "Request" },
-    })
-    .then((response) => {
-      optionsFiles.value = response.data;
-      console.log(optionsFiles.value);
-    })
-    .catch((error) => console.log(error));
-};
-getDocuments();
 
 const getTable = async () => {
   await store
@@ -127,14 +108,21 @@ const getTable = async () => {
       subjectList.value = response.data;
     })
     .catch((error) => console.log(error));
+};
 
-  await store
-    .dispatch("teachersHoursApi/GetDocument", documentId.value)
+const route = useRoute();
+if (route.params.id) {
+  console.log(route.params.id as string);
+  documentId.value = route.params.id as string;
+  console.log(documentId.value);
+  store
+    .dispatch("teachersHoursApi/GetDocument", route.params.id)
     .then((response) => {
       document.value = response.data;
     })
     .catch((error) => console.log(error));
-};
+  getTable();
+}
 
 const getTeachers = async () => {
   await store
@@ -154,10 +142,25 @@ const addTeachers = async () => {
     })
     .catch((error) => console.log(error));
 };
+const reportGenerate = async () => {
+  await addTeachers();
+  await store
+    .dispatch("teachersHoursApi/GenerateCalculationFile", documentId.value)
+    .then((response) => {
+      console.log(response);
+      document.value.childDocuments.push(response.data);
+    });
+};
 </script>
 
 <style lang="scss">
 #hours-calculation {
+  .el-row {
+    margin-bottom: 20px;
+  }
+  .el-row:last-child {
+    margin-bottom: 0;
+  }
   .select-card {
     display: flex;
     justify-content: flex-start;
@@ -166,8 +169,9 @@ const addTeachers = async () => {
     margin-right: 10px;
     margin-left: 0px;
   }
-  .el-card {
+  > .el-card {
     margin-bottom: 20px;
+    background-color: #ecf5ff;
   }
 }
 </style>
