@@ -226,6 +226,9 @@ const visibilityAddOrUpdateButton = (button: string) => {
   }
 }
 #teachers {
+  .left-align-button {
+    text-align: left;
+  }
   .el-card {
     margin-bottom: 20px;
   }

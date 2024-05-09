@@ -16,7 +16,7 @@
       <el-icon><User /></el-icon>
       <span>Преподаватели</span>
     </el-menu-item>
-    <el-menu-item index="home">
+    <el-menu-item index="calculation">
       <el-icon><document /></el-icon>
       <span>Расчет часов</span>
     </el-menu-item>

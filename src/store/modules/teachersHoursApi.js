@@ -17,7 +17,8 @@ export default {
         data,
       });
     },
-    GetFile({ rootState }) {
+    GetFiles({ rootState }, { params }) {
+      console.log(params);
       return API({
         method: "get",
         url: `https://localhost:7055/api/reports`,
@@ -25,6 +26,7 @@ export default {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
+        params,
       });
     },
     AddTeacher({ rootState }, data) {
@@ -48,17 +50,39 @@ export default {
         },
       });
     },
-    UpdateTeacher({ rootState }, { teacherId, data }) {
-      console.log(teacherId);
-      console.log(teacherId);
+    UpdateTeacher({ rootState }, { documentId, data }) {
       return API({
-        method: "put",
-        url: `https://localhost:7055/api/teachers/${teacherId}`,
+        method: "post",
+        url: `https://localhost:7055/api/reports/${documentId}/add-teachers`,
+        responseType: "blob",
+        data,
+      });
+    },
+    GetDocumentFile({ rootState }, documentId) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/reports/${documentId}/download`,
+        responseType: "blob",
+      });
+    },
+    GetDocumentTable({ rootState }, documentId) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/reports/${documentId}/subjects`,
         headers: {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
-        data,
+      });
+    },
+    GetDocument({ rootState }, documentId) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/reports/${documentId}`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
       });
     },
   },
