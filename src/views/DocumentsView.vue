@@ -105,9 +105,6 @@ const getDocumentTypeTag = (type: string) => {
 </script>
 
 <style lang="scss">
-.left-align-button {
-  text-align: left;
-}
 .documents-table {
   .el-table th {
     color: #19191a;
@@ -120,6 +117,9 @@ const getDocumentTypeTag = (type: string) => {
   }
 }
 #documents {
+  .left-align-button {
+    text-align: left;
+  }
   .el-collapse {
     margin-bottom: 20px;
   }

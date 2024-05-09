@@ -3,7 +3,12 @@ export interface IDocument {
   name: string;
   createdAt: string;
   documentType: string;
+  childDocuments: IDocument[];
 }
+
+// export interface IDocumentWithFile extends IDocument {
+//   file: Blob;
+// }
 
 export interface ISubject {
   name: string;

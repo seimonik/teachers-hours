@@ -50,12 +50,10 @@ export default {
         },
       });
     },
-    UpdateTeacher({ rootState }, { teacherId, data }) {
-      console.log(teacherId);
-      console.log(data);
+    UpdateTeacher({ rootState }, { documentId, data }) {
       return API({
         method: "post",
-        url: `https://localhost:7055/api/reports/${teacherId}/add-teachers`,
+        url: `https://localhost:7055/api/reports/${documentId}/add-teachers`,
         responseType: "blob",
         data,
       });
@@ -68,6 +66,16 @@ export default {
       });
     },
     GetDocumentTable({ rootState }, documentId) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/reports/${documentId}/subjects`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    GetDocument({ rootState }, documentId) {
       return API({
         method: "get",
         url: `https://localhost:7055/api/reports/${documentId}`,

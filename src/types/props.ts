@@ -1,5 +1,5 @@
-import { ISubject } from "./interfaces/document";
+import { IDocument } from "./interfaces/document";
 
-export interface SubjectListProps {
-  subjectList: ISubject[];
+export interface FilesListProps {
+  files: IDocument[];
 }
