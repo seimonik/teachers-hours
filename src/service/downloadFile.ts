@@ -1,12 +1,8 @@
-// const downloadFile = (responseData, fileName, fileExtantion) => {
-//   const blob = new Blob([responseData]);
-//   const fileURL = window.URL.createObjectURL(blob);
-//   const fileLink = document.createElement("a");
-//   fileLink.href = fileURL;
-//   fileLink.setAttribute("download", `${fileName}${fileExtantion}`);
-//   document.body.appendChild(fileLink);
-//   fileLink.click();
-//   document.body.removeChild(fileLink);
-// };
-
-// export default downloadFile;
+export const downloadFile = (blob: Blob, fileName: string) => {
+  const link = document.createElement("a");
+  link.href = window.URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};

@@ -58,7 +58,7 @@ export default {
         data,
       });
     },
-    GetDocumentFile({ rootState }, documentId) {
+    DownloadFile({ rootState }, documentId) {
       return API({
         method: "get",
         url: `https://localhost:7055/api/reports/${documentId}/download`,
@@ -79,6 +79,16 @@ export default {
       return API({
         method: "get",
         url: `https://localhost:7055/api/reports/${documentId}`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    GenerateCalculationFile({ rootState }, documentId) {
+      return API({
+        method: "post",
+        url: `https://localhost:7055/api/reports/generate-calculation/${documentId}`,
         headers: {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
