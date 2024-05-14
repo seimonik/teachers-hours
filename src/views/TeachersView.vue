@@ -11,7 +11,7 @@
         <el-table-column prop="surname" label="Фамилия" width="200" />
         <el-table-column prop="name" label="Имя" width="200" />
         <el-table-column prop="patronymic" label="Отчество" width="200" />
-        <el-table-column prop="rate" label="Ставка" />
+        <el-table-column prop="rate" label="Ставка (часы)" />
         <el-table-column prop="action" label="Действие">
           <template #default="scope">
             <el-button
@@ -55,7 +55,7 @@
         <el-form-item label="Отчество" prop="patronymic">
           <el-input v-model="teacherForm.patronymic" style="width: 240px" />
         </el-form-item>
-        <el-form-item label="Ставка" prop="rate">
+        <el-form-item label="Ставка (часы)" prop="rate">
           <el-input v-model="teacherForm.rate" style="width: 240px" />
         </el-form-item>
         <el-form-item>

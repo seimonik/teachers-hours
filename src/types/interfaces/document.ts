@@ -6,10 +6,6 @@ export interface IDocument {
   childDocuments: IDocument[];
 }
 
-// export interface IDocumentWithFile extends IDocument {
-//   file: Blob;
-// }
-
 export interface ISubject {
   name: string;
   specialization: string;
