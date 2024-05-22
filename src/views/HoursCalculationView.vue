@@ -13,7 +13,7 @@
           </el-row>
           <el-row>
             <el-button color="#626aef" @click="addTeachers"
-              >Изменить преподавательский состав</el-button
+              >Сохранить преподавательский состав</el-button
             >
             <el-button color="#626aef" @click="reportGenerate"
               >Сгенерировать отчет</el-button
@@ -56,17 +56,18 @@
       <el-table-column prop="reportingForm" label="Форма отчетности" />
       <el-table-column prop="remark" label="Примечание" />
       <el-table-column
-        prop="teacherFullName"
+        prop="teacherShow"
         label="Преподаватель"
-        width="270px"
+        width="350px"
         fixed="right"
       >
-        <template #default="{ row }">
+        <template #default="scope">
           <el-select
-            v-model="row.teacherFullName"
+            v-if="scope.row.name !== 'Курсовая работа'"
+            v-model="scope.row.teacherShow"
             filterable
-            placeholder="Select"
-            style="width: 240px"
+            placeholder="Выберите преподавателя"
+            style="width: 310px"
           >
             <el-option
               v-for="item in teachersList"
@@ -75,6 +76,47 @@
               :value="item.fullName"
             />
           </el-select>
+
+          <div v-else>
+            <el-table
+              :data="scope.row.teacherFullName"
+              :show-header="false"
+              style="width: 100%"
+            >
+              <el-table-column prop="name" width="240px">
+                <template #default="{ row }">
+                  <el-select
+                    v-model="row.teacherName"
+                    filterable
+                    placeholder="Select"
+                    style="width: 240px"
+                  >
+                    <el-option
+                      v-for="item in teachersList"
+                      :key="item.id"
+                      :label="item.fullName"
+                      :value="item.fullName"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column prop="count">
+                <template #default="{ row }">
+                  <el-input-number
+                    v-model="row.studentsCount"
+                    :controls="false"
+                    style="width: 45px"
+                  ></el-input-number>
+                </template>
+              </el-table-column>
+            </el-table>
+            <!-- <el-button type="primary" :icon="Plus" @click="addNewRow" /> -->
+          </div>
+          <el-button
+            type="primary"
+            :icon="Plus"
+            @click="addNewRow(scope.$index)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -85,10 +127,15 @@
 import { ref } from "vue";
 import store from "@/store";
 import FilesList from "@/components/calculations/FilesList.vue";
-import { IDocument, ISubject } from "@/types/interfaces/document";
+import {
+  IDocument,
+  ISubject,
+  ITeacherStudents,
+} from "@/types/interfaces/document";
 import { IGetTeacher } from "@/types/interfaces/teacher";
 import { useRoute } from "vue-router";
 import { getFormattedDate } from "@/service/formatDate";
+import { Plus } from "@element-plus/icons-vue";
 
 const documentId = ref("");
 const document = ref<IDocument>({
@@ -106,8 +153,14 @@ const getTable = async () => {
     .dispatch("teachersHoursApi/GetDocumentTable", documentId.value)
     .then((response) => {
       subjectList.value = response.data;
+      subjectList.value?.forEach((subject) => {
+        if (subject.name !== "Курсовая работа") {
+          subject.teacherShow = subject.teacherFullName[0].teacherName;
+        }
+      });
     })
     .catch((error) => console.log(error));
+  console.log(subjectList.value);
 };
 
 const route = useRoute();
@@ -133,14 +186,31 @@ const getTeachers = async () => {
     .catch((error) => console.log(error));
 };
 getTeachers();
+const toTeachersValue = (fullName: string) => {
+  const value: ITeacherStudents[] = [
+    {
+      teacherName: fullName,
+      studentsCount: 0,
+    },
+  ];
+  return value;
+};
+
+const addNewRow = (index) => {
+  console.log(index);
+};
 
 const addTeachers = async () => {
-  await store
-    .dispatch("teachersHoursApi/UpdateTeacher", {
-      documentId: documentId.value,
-      data: subjectList.value.map((x) => x.teacherFullName),
-    })
-    .catch((error) => console.log(error));
+  // await store
+  //   .dispatch("teachersHoursApi/UpdateTeacher", {
+  //     documentId: documentId.value,
+  //     data: subjectList.value.map((x) => x.teacherFullName),
+  //   })
+  //   .catch((error) => console.log(error));
+  subjectList.value?.forEach((subject) => {
+    subject.teacherFullName = toTeachersValue(subject.teacherShow);
+  });
+  console.log(subjectList.value.map((x) => x.teacherFullName));
 };
 const reportGenerate = async () => {
   await addTeachers();

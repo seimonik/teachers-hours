@@ -22,5 +22,11 @@ export interface ISubject {
   loadPerWeek: string;
   reportingForm: string;
   remark: string;
-  teacherFullName: string;
+  teacherFullName: ITeacherStudents[];
+  teacherShow: string;
+}
+
+export interface ITeacherStudents {
+  teacherName: string;
+  studentsCount: number;
 }
