@@ -25,101 +25,118 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-table :data="subjectList" style="width: 100%">
-      <el-table-column
-        prop="name"
-        label="Наименование дисциплины"
-        width="150px"
-      />
-      <el-table-column
-        prop="specialization"
-        label="Специальность"
-        width="150px"
-      />
-      <el-table-column prop="semester" label="Семестр" width="150px" />
-      <el-table-column label="Количество студентов">
-        <el-table-column prop="budget" label="бюджет" />
-        <el-table-column prop="commercial" label="коммерч." width="100px" />
-      </el-table-column>
-      <el-table-column prop="groups" label="Группа (номер)" />
-      <el-table-column prop="groupForm" label="Форма группы" />
-      <el-table-column prop="totalHours" label="Всего часов" />
-      <el-table-column label="Из них">
-        <el-table-column label="аудиторные">
-          <el-table-column prop="lectures" label="лекции" />
-          <el-table-column prop="seminars" label="практич., семинар. занятия" />
-          <el-table-column prop="laboratory" label="лаборатор. занятия" />
+    <div class="subject-table">
+      <el-table :data="subjectList" style="width: 100%">
+        <el-table-column
+          prop="name"
+          label="Наименование дисциплины"
+          width="150px"
+        />
+        <el-table-column
+          prop="specialization"
+          label="Специальность"
+          width="150px"
+        />
+        <el-table-column prop="semester" label="Семестр" width="150px" />
+        <el-table-column label="Количество студентов">
+          <el-table-column prop="budget" label="бюджет" />
+          <el-table-column prop="commercial" label="комм." />
         </el-table-column>
-        <el-table-column prop="selfStudy" label="Самостоятельная работа" />
-      </el-table-column>
-      <el-table-column prop="loadPerWeek" label="Нагрузка в неделю" />
-      <el-table-column prop="reportingForm" label="Форма отчетности" />
-      <el-table-column prop="remark" label="Примечание" />
-      <el-table-column
-        prop="teacherShow"
-        label="Преподаватель"
-        width="350px"
-        fixed="right"
-      >
-        <template #default="scope">
-          <el-select
-            v-if="scope.row.name !== 'Курсовая работа'"
-            v-model="scope.row.teacherShow"
-            filterable
-            placeholder="Выберите преподавателя"
-            style="width: 310px"
-          >
-            <el-option
-              v-for="item in teachersList"
-              :key="item.id"
-              :label="item.fullName"
-              :value="item.fullName"
+        <el-table-column prop="groups" label="Группа (номер)" />
+        <el-table-column prop="groupForm" label="Форма группы" />
+        <el-table-column prop="totalHours" label="Всего часов" />
+        <el-table-column label="Из них">
+          <el-table-column label="аудиторные">
+            <el-table-column prop="lectures" label="лекции" />
+            <el-table-column
+              prop="seminars"
+              label="практич., семинар. занятия"
+              width="100px"
             />
-          </el-select>
-
-          <div v-else>
-            <el-table
-              :data="scope.row.teacherFullName"
-              :show-header="false"
-              style="width: 100%"
-            >
-              <el-table-column prop="name" width="240px">
-                <template #default="{ row }">
-                  <el-select
-                    v-model="row.teacherName"
-                    filterable
-                    placeholder="Select"
-                    style="width: 240px"
-                  >
-                    <el-option
-                      v-for="item in teachersList"
-                      :key="item.id"
-                      :label="item.fullName"
-                      :value="item.fullName"
-                    />
-                  </el-select>
-                </template>
-              </el-table-column>
-              <el-table-column prop="count">
-                <template #default="{ row }">
-                  <el-input-number
-                    v-model="row.studentsCount"
-                    :controls="false"
-                    style="width: 45px"
-                  ></el-input-number>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- <el-button type="primary" :icon="Plus" @click="addNewRow" /> -->
-          </div>
-          <el-button
-            type="primary"
-            :icon="Plus"
-            @click="addNewRow(scope.$index)"
+            <el-table-column prop="laboratory" label="лаб. занятия" />
+          </el-table-column>
+          <el-table-column
+            prop="selfStudy"
+            label="Самост. работа"
+            width="100px"
           />
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-table-column>
+        <el-table-column
+          prop="loadPerWeek"
+          label="Нагрузка в неделю"
+          width="90px"
+        />
+        <el-table-column
+          prop="reportingForm"
+          label="Форма отчетности"
+          width="105px"
+        />
+        <el-table-column prop="remark" label="Примечание" width="120px" />
+        <el-table-column
+          prop="teacherShow"
+          label="Преподаватель"
+          width="350px"
+          fixed="right"
+        >
+          <template #default="scope">
+            <el-select
+              v-if="!SubjectsDividedIntoTeachers.includes(scope.row.name)"
+              v-model="scope.row.teacherShow"
+              filterable
+              placeholder="Выберите преподавателя"
+              style="width: 310px"
+            >
+              <el-option
+                v-for="item in teachersList"
+                :key="item.id"
+                :label="item.fullName"
+                :value="item.fullName"
+              />
+            </el-select>
+
+            <div v-else>
+              <div
+                v-for="(item, index) in scope.row.teacherFullName"
+                :key="index"
+                class="gap-3"
+              >
+                <el-select
+                  v-model="item.teacherName"
+                  filterable
+                  placeholder="Выберите преподавателя"
+                  style="width: 240px"
+                >
+                  <el-option
+                    v-for="teacher in teachersList"
+                    :key="teacher.id"
+                    :label="teacher.fullName"
+                    :value="teacher.fullName"
+                  />
+                </el-select>
+                <el-input-number
+                  v-model="item.studentsCount"
+                  :controls="false"
+                  style="width: 45px"
+                ></el-input-number>
+                <el-button
+                  type="danger"
+                  :icon="CloseBold"
+                  circle
+                  :disabled="!scope.row.teacherFullName.length"
+                  @click="deleteRow(scope.$index, index)"
+                />
+              </div>
+              <el-button
+                type="primary"
+                :icon="Plus"
+                circle
+                @click="addNewRow(scope.$index)"
+              />
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -135,7 +152,8 @@ import {
 import { IGetTeacher } from "@/types/interfaces/teacher";
 import { useRoute } from "vue-router";
 import { getFormattedDate } from "@/service/formatDate";
-import { Plus } from "@element-plus/icons-vue";
+import { Plus, CloseBold } from "@element-plus/icons-vue";
+import { SubjectsDividedIntoTeachers } from "@/types/constants/subjectNames";
 
 const documentId = ref("");
 const document = ref<IDocument>({
@@ -154,7 +172,7 @@ const getTable = async () => {
     .then((response) => {
       subjectList.value = response.data;
       subjectList.value?.forEach((subject) => {
-        if (subject.name !== "Курсовая работа") {
+        if (!SubjectsDividedIntoTeachers.includes(subject.name)) {
           subject.teacherShow = subject.teacherFullName[0].teacherName;
         }
       });
@@ -186,6 +204,30 @@ const getTeachers = async () => {
     .catch((error) => console.log(error));
 };
 getTeachers();
+
+const addNewRow = (index: number) => {
+  subjectList.value[index].teacherFullName.push({
+    teacherName: "",
+    studentsCount: 0,
+  });
+};
+const deleteRow = (indexSubject: number, indexTeacher: number) => {
+  subjectList.value[indexSubject].teacherFullName.splice(indexTeacher, 1);
+};
+
+const addTeachers = async () => {
+  subjectList.value?.forEach((subject) => {
+    if (!SubjectsDividedIntoTeachers.includes(subject.name))
+      subject.teacherFullName = toTeachersValue(subject.teacherShow);
+  });
+  console.log(subjectList.value.map((x) => x.teacherFullName));
+  await store
+    .dispatch("teachersHoursApi/UpdateTeacher", {
+      documentId: documentId.value,
+      data: subjectList.value.map((x) => x.teacherFullName),
+    })
+    .catch((error) => console.log(error));
+};
 const toTeachersValue = (fullName: string) => {
   const value: ITeacherStudents[] = [
     {
@@ -196,22 +238,6 @@ const toTeachersValue = (fullName: string) => {
   return value;
 };
 
-const addNewRow = (index) => {
-  console.log(index);
-};
-
-const addTeachers = async () => {
-  // await store
-  //   .dispatch("teachersHoursApi/UpdateTeacher", {
-  //     documentId: documentId.value,
-  //     data: subjectList.value.map((x) => x.teacherFullName),
-  //   })
-  //   .catch((error) => console.log(error));
-  subjectList.value?.forEach((subject) => {
-    subject.teacherFullName = toTeachersValue(subject.teacherShow);
-  });
-  console.log(subjectList.value.map((x) => x.teacherFullName));
-};
 const reportGenerate = async () => {
   await addTeachers();
   await store
@@ -242,6 +268,11 @@ const reportGenerate = async () => {
   > .el-card {
     margin-bottom: 20px;
     background-color: #ecf5ff;
+  }
+}
+.subject-table {
+  .el-table th {
+    text-align: center;
   }
 }
 </style>
