@@ -95,5 +95,45 @@ export default {
         },
       });
     },
+    GetSpecializationLookups({ rootState }) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/lookups/specializations`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    DeleteSpecializationLookups({ rootState }, code) {
+      return API({
+        method: "delete",
+        url: `https://localhost:7055/api/lookups/specializations/${code}`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    GetTimeNorms({ rootState }) {
+      return API({
+        method: "get",
+        url: `https://localhost:7055/api/lookups/time-norms`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    DeleteDocument({ rootState }, documentId) {
+      return API({
+        method: "delete",
+        url: `https://localhost:7055/api/reports/${documentId}`,
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      });
+    },
   },
 };

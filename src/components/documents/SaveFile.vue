@@ -5,8 +5,9 @@
       :model="ruleForm"
       :rules="rules"
       :size="formSize"
+      label-position="top"
     >
-      <el-form-item prop="documentType">
+      <el-form-item prop="documentType" label="Тип документа">
         <el-select
           v-model="ruleForm.documentType"
           placeholder="Выберите"
@@ -30,15 +31,14 @@
         :limit="1"
         :data="parametersRequest"
         :auto-upload="false"
+        :on-success="reloadDocumentsList"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">
-          Drop file here or <em>click to upload</em>
+          Перетащите файл сюда или <em>нажмите, чтобы загрузить</em>
         </div>
         <template #tip>
-          <div class="el-upload__tip">
-            jpg/png files with a size less than 500kb
-          </div>
+          <div class="el-upload__tip">docx/xlsx файлы размером менее 20 МБ</div>
         </template>
       </el-upload>
       <div class="footer-container">
@@ -62,7 +62,12 @@ import type {
   UploadInstance,
 } from "element-plus";
 
-const parametersRequest = ref({ documentType: "" });
+const parametersRequest = ref<IRequest>({
+  documentType: "",
+});
+interface IRequest {
+  documentType: string;
+}
 const uploadRef = ref<UploadInstance>();
 const options = [
   {
@@ -85,12 +90,15 @@ const submitUpload = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       uploadRef.value!.submit();
-      emit("update-documents-list");
-      console.log("submit!");
+      console.log("submit TESTTTT!");
     } else {
       console.log("error submit!", fields);
     }
   });
+};
+
+const reloadDocumentsList = () => {
+  emit("update-documents-list");
 };
 
 const changeDocumentType = (type: string) => {

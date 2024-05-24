@@ -6,6 +6,7 @@
           <span>Расчеты</span>
         </div>
       </template>
+      <span v-if="files.length == 0">Нет файлов расчетов</span>
       <div v-for="file in files" :key="file.id">
         <el-link
           target="_self"

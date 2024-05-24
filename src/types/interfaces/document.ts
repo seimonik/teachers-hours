@@ -6,10 +6,6 @@ export interface IDocument {
   childDocuments: IDocument[];
 }
 
-// export interface IDocumentWithFile extends IDocument {
-//   file: Blob;
-// }
-
 export interface ISubject {
   name: string;
   specialization: string;
@@ -26,5 +22,11 @@ export interface ISubject {
   loadPerWeek: string;
   reportingForm: string;
   remark: string;
-  teacherFullName: string;
+  teacherFullName: ITeacherStudents[];
+  teacherShow: string;
+}
+
+export interface ITeacherStudents {
+  teacherName: string;
+  studentsCount: number;
 }

@@ -33,7 +33,7 @@
               <router-link
                 :to="{
                   name: 'calculation-generate',
-                  params: { id: 'c3613802-fe5d-4f9c-b0e2-e632c17f3c33' },
+                  params: { id: row.id },
                 }"
                 custom
                 v-slot="{ navigate }"
@@ -45,8 +45,16 @@
                   :icon="DocumentAdd"
                 />
               </router-link>
-              <el-button type="primary" :icon="Download" />
-              <el-button type="primary" :icon="Delete" />
+              <el-button
+                type="primary"
+                :icon="Download"
+                @click="downloadDocument(row.id, row.name)"
+              />
+              <el-button
+                type="primary"
+                :icon="Delete"
+                @click="deleteDocument(row.id)"
+              />
             </el-button-group>
           </template>
         </el-table-column>
@@ -74,14 +82,11 @@ import SaveFile from "@/components/documents/SaveFile.vue";
 import store from "@/store";
 import { getFormattedDate } from "@/service/formatDate";
 import { DocumentAdd, Delete, Download } from "@element-plus/icons-vue";
+import { IDocument } from "@/types/interfaces/document";
+import { downloadFile } from "@/service/downloadFile";
 
 const dialogVisible = ref(false);
 
-interface IDocument {
-  name: string;
-  createdAt: string;
-  documentType: string;
-}
 const documentsTable = ref<IDocument[]>();
 
 const getDocuments = async () => {
@@ -94,8 +99,25 @@ const getDocuments = async () => {
 };
 getDocuments();
 
-const reloadDocumentsList = () => {
-  getDocuments();
+const deleteDocument = async (documentId: string) => {
+  await store
+    .dispatch("teachersHoursApi/DeleteDocument", documentId)
+    .then(() => {
+      getDocuments();
+    });
+};
+
+const downloadDocument = async (documentId: string, documentName: string) => {
+  await store
+    .dispatch("teachersHoursApi/DownloadFile", documentId)
+    .then((response) => {
+      downloadFile(response.data, documentName);
+    });
+};
+
+const reloadDocumentsList = async () => {
+  dialogVisible.value = false;
+  await getDocuments();
 };
 
 const handleCloseDialog = () => {
