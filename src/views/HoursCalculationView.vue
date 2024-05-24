@@ -13,10 +13,13 @@
           </el-row>
           <el-row>
             <el-button color="#626aef" @click="addTeachers"
-              >Сохранить преподавательский состав</el-button
+              >Сохранить</el-button
             >
             <el-button color="#626aef" @click="reportGenerate"
               >Сгенерировать отчет</el-button
+            >
+            <el-button color="#626aef" @click="courseworkGenerate"
+              >Журнал курсовых работ</el-button
             >
           </el-row>
         </el-col>
@@ -145,6 +148,7 @@ import { ref } from "vue";
 import store from "@/store";
 import FilesList from "@/components/calculations/FilesList.vue";
 import {
+  ICourseworkInfo,
   IDocument,
   ISubject,
   ITeacherStudents,
@@ -154,6 +158,7 @@ import { useRoute } from "vue-router";
 import { getFormattedDate } from "@/service/formatDate";
 import { Plus, CloseBold } from "@element-plus/icons-vue";
 import { SubjectsDividedIntoTeachers } from "@/types/constants/subjectNames";
+import { downloadFile } from "@/service/downloadFile";
 
 const documentId = ref("");
 const document = ref<IDocument>({
@@ -245,6 +250,22 @@ const reportGenerate = async () => {
     .then((response) => {
       console.log(response);
       document.value.childDocuments.push(response.data);
+    });
+};
+
+const courseworkGenerate = async () => {
+  let courseworkInfo: ICourseworkInfo = {};
+  subjectList.value?.forEach((subject) => {
+    if (SubjectsDividedIntoTeachers.includes(subject.name)) {
+      let key = `${subject.name} (${Number(subject.semester) / 2} курс)`;
+      courseworkInfo[key] = subject.teacherFullName;
+    }
+  });
+  console.log(courseworkInfo);
+  await store
+    .dispatch("teachersHoursApi/GetCourseworkJournal", courseworkInfo)
+    .then((response) => {
+      downloadFile(response.data, "Журнал курсовых работ.docx");
     });
 };
 </script>

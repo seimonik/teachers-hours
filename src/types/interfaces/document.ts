@@ -30,3 +30,7 @@ export interface ITeacherStudents {
   teacherName: string;
   studentsCount: number;
 }
+
+export interface ICourseworkInfo {
+  [key: string]: ITeacherStudents[];
+}
