@@ -135,5 +135,13 @@ export default {
         },
       });
     },
+    GetCourseworkJournal({ rootState }, data) {
+      return API({
+        method: "post",
+        url: `https://localhost:7055/api/courseworks`,
+        responseType: "blob",
+        data,
+      });
+    },
   },
 };
