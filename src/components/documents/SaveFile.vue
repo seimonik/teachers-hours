@@ -5,8 +5,9 @@
       :model="ruleForm"
       :rules="rules"
       :size="formSize"
+      label-position="top"
     >
-      <el-form-item prop="documentType">
+      <el-form-item prop="documentType" label="Тип документа">
         <el-select
           v-model="ruleForm.documentType"
           placeholder="Выберите"
@@ -30,15 +31,15 @@
         :limit="1"
         :data="parametersRequest"
         :auto-upload="false"
+        :on-success="reloadDocumentsList"
+        :before-upload="beforeUpload"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">
-          Drop file here or <em>click to upload</em>
+          Перетащите файл сюда или <em>нажмите, чтобы загрузить</em>
         </div>
         <template #tip>
-          <div class="el-upload__tip">
-            jpg/png files with a size less than 500kb
-          </div>
+          <div class="el-upload__tip">docx/xlsx файлы размером менее 20 МБ</div>
         </template>
       </el-upload>
       <div class="footer-container">
@@ -48,6 +49,18 @@
         </el-button>
       </div>
     </el-form>
+    <el-dialog v-model="errorDialogVisible" width="300">
+      <el-result
+        icon="warning"
+        title="Ошибка"
+        sub-title="В файле обнаружены валидационные ошибки"
+      >
+        <template #extra>
+          <el-button @click="downloadFileWithValidateErrors">Скачать</el-button>
+          <el-button @click="errorDialogVisible = false">Отмена</el-button>
+        </template>
+      </el-result>
+    </el-dialog>
   </div>
 </template>
 
@@ -60,9 +73,18 @@ import type {
   FormRules,
   UploadFile,
   UploadInstance,
+  UploadProps,
 } from "element-plus";
+import store from "@/store";
+import { downloadFile } from "@/service/downloadFile";
 
-const parametersRequest = ref({ documentType: "" });
+const errorDialogVisible = ref(false);
+const parametersRequest = ref<IRequest>({
+  documentType: "",
+});
+interface IRequest {
+  documentType: string;
+}
 const uploadRef = ref<UploadInstance>();
 const options = [
   {
@@ -85,12 +107,43 @@ const submitUpload = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       uploadRef.value!.submit();
-      emit("update-documents-list");
-      console.log("submit!");
+      console.log("submit TESTTTT!");
     } else {
       console.log("error submit!", fields);
     }
   });
+};
+
+const fileError = ref();
+const fileName = ref();
+const beforeUpload: UploadProps["beforeUpload"] = async (rawFile) => {
+  if (parametersRequest.value.documentType === "Request") {
+    let result = true;
+    await store
+      .dispatch("teachersHoursApi/ValidateFile", { file: rawFile })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.size !== 0) {
+          result = false;
+          errorDialogVisible.value = true;
+          fileError.value = response.data;
+          fileName.value = rawFile.name.replace(/\.[^.]*$/, "");
+          // downloadFile(response.data, `${fileName}(валидационные ошибки).xlsx`);
+        }
+      });
+    return result;
+  } else {
+    return true;
+  }
+};
+
+const downloadFileWithValidateErrors = () => {
+  downloadFile(fileError.value, `${fileName.value}(валидационные ошибки).xlsx`);
+  errorDialogVisible.value = false;
+};
+
+const reloadDocumentsList = () => {
+  emit("update-documents-list");
 };
 
 const changeDocumentType = (type: string) => {

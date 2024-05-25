@@ -14,10 +14,6 @@ import AsideMenu from "../components/AsideMenu.vue";
 </script>
 
 <style scoped>
-.layout-container-demo .el-menu {
-  border-right: none;
-  background: var(--el-color-primary-light-8);
-}
 .layout-container-demo .el-aside {
   color: var(--el-text-color-primary);
   background: var(--el-color-primary-light-8);

@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import DocumentsView from "@/views/DocumentsView.vue";
+import TeachersView from "@/views/TeachersView.vue";
+import HoursCalculationView from "@/views/HoursCalculationView.vue";
+import AdministrationView from "@/views/AdministrationView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -26,6 +29,26 @@ const routes: Array<RouteRecordRaw> = [
         path: "/documents",
         name: "documents",
         component: DocumentsView,
+      },
+      {
+        path: "/teachers",
+        name: "teachers",
+        component: TeachersView,
+      },
+      {
+        path: "/calculation",
+        name: "calculation",
+        component: HoursCalculationView,
+      },
+      {
+        path: "/calculation/:id",
+        name: "calculation-generate",
+        component: HoursCalculationView,
+      },
+      {
+        path: "/administration",
+        name: "administration",
+        component: AdministrationView,
       },
     ],
   },

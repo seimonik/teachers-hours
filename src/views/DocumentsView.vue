@@ -5,12 +5,10 @@
       </el-collapse-item>
     </el-collapse>
     <el-card shadow="never">
-      <div class="d-flex gap-2">
-        <div class="left-align-button">
-          <el-button color="#626aef" @click="dialogVisible = true"
-            >Загрузить</el-button
-          >
-        </div>
+      <div class="left-align-button">
+        <el-button color="#626aef" @click="dialogVisible = true"
+          >Загрузить</el-button
+        >
       </div>
     </el-card>
 
@@ -19,13 +17,46 @@
         <el-table-column prop="name" label="Название" />
         <el-table-column prop="documentType" label="Тип документа" width="250">
           <template #default="{ row }">
-            {{ getDocumentType(row.documentType) }}</template
+            <el-tag :type="getDocumentTypeTag(row.documentType)">
+              {{ getDocumentType(row.documentType) }}</el-tag
+            ></template
           ></el-table-column
         >
         <el-table-column prop="createdAt" label="Дата создания" width="250">
           <template #default="{ row }">
             {{ getFormattedDate(row.createdAt) }}</template
           >
+        </el-table-column>
+        <el-table-column width="200px">
+          <template #default="{ row }">
+            <el-button-group class="ml-4">
+              <router-link
+                :to="{
+                  name: 'calculation-generate',
+                  params: { id: row.id },
+                }"
+                custom
+                v-slot="{ navigate }"
+              >
+                <el-button
+                  v-if="row.documentType === 'Request'"
+                  type="primary"
+                  @click="navigate"
+                  :icon="DocumentAdd"
+                />
+              </router-link>
+              <el-button
+                type="primary"
+                :icon="Download"
+                @click="downloadDocument(row.id, row.name)"
+              />
+              <el-button
+                type="primary"
+                :icon="Delete"
+                @click="deleteDocument(row.id)"
+              />
+            </el-button-group>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -49,20 +80,18 @@
 import { ref } from "vue";
 import SaveFile from "@/components/documents/SaveFile.vue";
 import store from "@/store";
-import { getFormattedDate } from "@/sevice/formatDate";
+import { getFormattedDate } from "@/service/formatDate";
+import { DocumentAdd, Delete, Download } from "@element-plus/icons-vue";
+import { IDocument } from "@/types/interfaces/document";
+import { downloadFile } from "@/service/downloadFile";
 
 const dialogVisible = ref(false);
 
-interface IDocument {
-  name: string;
-  createdAt: string;
-  documentType: string;
-}
 const documentsTable = ref<IDocument[]>();
 
 const getDocuments = async () => {
   await store
-    .dispatch("teachersHoursApi/GetFile")
+    .dispatch("teachersHoursApi/GetFiles", { params: null })
     .then((response) => {
       documentsTable.value = response.data;
     })
@@ -70,8 +99,25 @@ const getDocuments = async () => {
 };
 getDocuments();
 
-const reloadDocumentsList = () => {
-  getDocuments();
+const deleteDocument = async (documentId: string) => {
+  await store
+    .dispatch("teachersHoursApi/DeleteDocument", documentId)
+    .then(() => {
+      getDocuments();
+    });
+};
+
+const downloadDocument = async (documentId: string, documentName: string) => {
+  await store
+    .dispatch("teachersHoursApi/DownloadFile", documentId)
+    .then((response) => {
+      downloadFile(response.data, documentName);
+    });
+};
+
+const reloadDocumentsList = async () => {
+  dialogVisible.value = false;
+  await getDocuments();
 };
 
 const handleCloseDialog = () => {
@@ -90,12 +136,21 @@ const getDocumentType = (type: string) => {
       return "Обычный";
   }
 };
+const getDocumentTypeTag = (type: string) => {
+  switch (type) {
+    case "Ordinary":
+      return "info";
+    case "Request":
+      return "success";
+    case "Calculation":
+      return "primary";
+    default:
+      return "info";
+  }
+};
 </script>
 
 <style lang="scss">
-.left-align-button {
-  text-align: left;
-}
 .documents-table {
   .el-table th {
     color: #19191a;
@@ -108,6 +163,9 @@ const getDocumentType = (type: string) => {
   }
 }
 #documents {
+  .left-align-button {
+    text-align: left;
+  }
   .el-collapse {
     margin-bottom: 20px;
   }
