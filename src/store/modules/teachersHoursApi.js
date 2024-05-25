@@ -143,5 +143,17 @@ export default {
         data,
       });
     },
+    ValidateFile({ rootState }, data) {
+      return API({
+        method: "post",
+        url: `https://localhost:7055/api/reports/validate`,
+        headers: {
+          Accept: "multipart/form-data, text/plain, */*",
+          "Content-Type": "multipart/form-data",
+        },
+        responseType: "blob",
+        data,
+      });
+    },
   },
 };
