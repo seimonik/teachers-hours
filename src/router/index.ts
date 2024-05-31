@@ -50,6 +50,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "administration",
         component: AdministrationView,
       },
+      {
+        path: "/:pathMatch(.*)*",
+        name: "404",
+        component: HomeView,
+      },
     ],
   },
 ];
