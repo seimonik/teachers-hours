@@ -1,7 +1,7 @@
 <template>
   <div id="aside-menu-block">
     <el-menu
-      default-active="documents"
+      :default-active="currentMenuItem"
       class="el-menu-vertical-demo"
       @select="handleSelect"
     >
@@ -17,24 +17,37 @@
         <el-icon><User /></el-icon>
         <span>Преподаватели</span>
       </el-menu-item>
-      <el-menu-item index="administration">
+      <el-menu-item
+        v-if="checkRouteAccess('administration')"
+        index="administration"
+      >
         <el-icon><Service /></el-icon>
         <span>Администрирование</span>
+      </el-menu-item>
+      <el-menu-item index="logout">
+        <el-icon><Back /></el-icon>
+        <span>Выйти</span>
       </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script setup>
-import { Edit, User } from "@element-plus/icons-vue";
+import { Back, Edit, User, Service } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import logo from "@/assets/sgulogo.png";
+import { computed } from "vue";
+import store from "@/store";
 
 const router = useRouter();
+
+const currentMenuItem = computed(() => router.currentRoute.value.name);
 
 const handleSelect = (key) => {
   router.push({ name: key });
 };
+
+const checkRouteAccess = (key) => store.getters.IsRouteAllowed(key);
 </script>
 
 <style lang="scss">

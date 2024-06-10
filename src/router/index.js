@@ -1,11 +1,13 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import DocumentsView from "@/views/DocumentsView.vue";
 import TeachersView from "@/views/TeachersView.vue";
 import HoursCalculationView from "@/views/HoursCalculationView.vue";
 import AdministrationView from "@/views/AdministrationView.vue";
+import store from "@/store";
+import { login, logout } from "@/service/authorization";
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
     path: "",
     name: "employee",
@@ -57,11 +59,27 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  {
+    path: "/logout",
+    name: "logout",
+    meta: { title: "Выход" },
+    beforeEnter() {
+      logout();
+    },
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (!store.getters.isAuthorized) {
+    login(() => next("/documents"));
+  } else {
+    next();
+  }
 });
 
 export default router;
