@@ -6,7 +6,7 @@
     </el-collapse>
     <el-card shadow="never">
       <div class="left-align-button">
-        <el-button color="#626aef" @click="dialogVisible = true"
+        <el-button size="large" color="#626aef" @click="dialogVisible = true"
           >Загрузить</el-button
         >
       </div>
@@ -17,7 +17,7 @@
         <el-table-column prop="name" label="Название" />
         <el-table-column prop="documentType" label="Тип документа" width="250">
           <template #default="{ row }">
-            <el-tag :type="getDocumentTypeTag(row.documentType)">
+            <el-tag size="large" :type="getDocumentTypeTag(row.documentType)">
               {{ getDocumentType(row.documentType) }}</el-tag
             ></template
           ></el-table-column
@@ -156,6 +156,7 @@ const getDocumentTypeTag = (type: string) => {
     color: #19191a;
     text-align: center;
     background-color: #f6f6f8;
+    font-size: 16px;
   }
 
   .el-table td {
